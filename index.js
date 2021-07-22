@@ -91,8 +91,9 @@ const reloadApp = async (params) => {
       EXKernelDisableNuxDefaultsKey: true,
       detoxURLBlacklistRegex: formattedBlacklistArg,
       detoxEnableSynchronization: 0,
-      ...(params.launchArgs ? params.launchArgs : {}),
+      ...(params && params.launchArgs),
     },
+    ...(params && params.args),
   });
 
   if (semver.lt(detoxVersion, "9.0.6")) {
