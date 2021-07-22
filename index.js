@@ -70,7 +70,7 @@ const reloadApp = async (params) => {
     newInstance: true,
     url,
     sourceApp: 'host.exp.exponent',
-    launchArgs: { EXKernelDisableNuxDefaultsKey: true, detoxURLBlacklistRegex: formattedBlacklistArg, detoxEnableSynchronization: 0 },
+    launchArgs: { EXKernelDisableNuxDefaultsKey: true, detoxURLBlacklistRegex: formattedBlacklistArg, detoxEnableSynchronization: 0, ...(params.launchArgs ? params.launchArgs : {}) },
   });
 
   
