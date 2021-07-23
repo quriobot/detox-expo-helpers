@@ -7,9 +7,9 @@ Utilities for using [detox](http://github.com/wix/detox) in your Expo/Create Rea
 ### Install it
 
 ```
-yarn add detox-expo-helpers -D
+yarn add fschoenfeldt/detox-expo-helpers -D
  # or
-npm i detox-expo-helpers --save-dev
+npm i fschoenfeldt/detox-expo-helpers --save-dev
 ```
 
 Also, declare `expo-detox-hooks` in your project's `package.json`.
@@ -24,8 +24,43 @@ You can download the Expo app from the [Expo Tools page](https://expo.io/tools).
 
 ### Use detox-expo-helpers in your app
 
-All you really need to use is `reloadApp`, like so: https://github.com/expo/with-detox-tests/blob/master/e2e/firstTest.spec.js#L1-L6
+> ⚠️ Important: This fork disables `deviceSynchronization` because it was the only way we could figure out getting Detox@18 to work. When launching the App with `reloadApp`, you have to wait for the first element to ensure the app is properly booted. (See Example)
+
+All you really need to use is `reloadApp`, like so:
+
+```js
+const { reloadApp } = require('detox-expo-helpers');
+
+describe(`Example Tests`, () => {
+    beforeAll(async () => {
+      await reloadApp({
+        // Optionally, you can also set some parameters when loading the app
+        // see https://github.com/wix/Detox/blob/master/docs/APIRef.DeviceObjectAPI.md
+        args: {
+          disableTouchIndicators: true,
+          delete: true,
+          languageAndLocale: {
+            language: "de-DE",
+            locale: "de-DE",
+          },
+        },
+        launchArgs: {
+          // see https://github.com/wix/Detox/blob/master/docs/APIRef.LaunchArgs.md
+        }
+      });
+      // ⚠️ Important! Wait for first element to ensure that app is booted
+      const confirmButton = $('confirm_button');
+      await waitFor(confirmButton).toBeVisible().withTimeout(10000);
+    });
+
+    // Your tests
+    it('can do this and that', async () => { ... }
+}
+```
 
 ## Example app
 
+You can find the latest example app here, which is working with Expo@42 and Detox@18: https://github.com/fschoenfeldt/clean-expo-detox-testing
+
+Original Example App:
 Try out an example app with this already configured at https://github.com/expo/with-detox-tests
